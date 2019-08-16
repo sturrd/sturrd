@@ -5,4 +5,31 @@
     <string name="sign_in_with_email">Sign in with email</string>
     <string name="continue_">Continue</string>
     <string name="enter_your_phone_number">Enter your phone number</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="no_likes_yet">No Likes Yet</string>
+    <string name="no_matches_yet">No Matches Yet..</string>
+    <string name="no_messages">No messages...</string>
+    <string name="new_likes">New likes</string>
+    <string name="s_t_u_r_r_d">S t u r r d</string>
+    <string name="new_matches">New Matches</string>
+    <string name="explore_sturrd">Explore Sturrd in your area</string>
+    <string name="messages">Messages</string>
+    <string name="match_s_name">Match\'s Name</string>
+    <string name="user_s_name">User\'s Name</string>
+    <string name="cancel">cancel</string>
+    <string name="edit_text_message_hint">message...</string>
+    <string name="moments">Moments</string>
+    <string name="settings">Settings</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="tab_text_3">Tab 3</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_tempact">tempact</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="title_activity_explore_screen">Explore</string>
 </resources>

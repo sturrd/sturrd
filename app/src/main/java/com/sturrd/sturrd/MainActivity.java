@@ -1,34 +1,217 @@
 package com.sturrd.sturrd;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.util.Log;
+import android.view.MenuItem;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.sturrd.sturrd.Fragments.DatesFragment;
+import com.sturrd.sturrd.Fragments.ExploreFragment;
+import com.sturrd.sturrd.Fragments.MessagesFragment;
+import com.sturrd.sturrd.Fragments.RequestsFragment;
+import com.sturrd.sturrd.Fragments.UserFragment;
 
-public class MainActivity extends AppCompatActivity {
-    private Button button;
-    FirebaseAuth mAuth;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+    private BottomNavigationView bottomNavigationView;
+    private String currentUId;
+    ViewPager viewPager;
+    private DatabaseReference usersDb, instanceDb;
+    private FusedLocationProviderClient client;
+    MessagesFragment messagesFragment;
+    DatesFragment datesFragment;
+    RequestsFragment requestsFragment;
+    ExploreFragment exploreFragment;
+    UserFragment userFragment;
+
+    MenuItem prevMenuItem;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //save the notificationID to the database
 
-        button = findViewById(R.id.logout);
-        mAuth = FirebaseAuth.getInstance();
+        viewPager = findViewById(R.id.viewpager);
 
-        button.setOnClickListener(new View.OnClickListener() {
+
+        client = LocationServices.getFusedLocationProviderClient(this);
+        bottomNavigationView = findViewById(R.id.navigation);
+
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onClick(View v) {
-                mAuth.signOut();
-                Intent i = new Intent(getApplicationContext(), EmailSignin.class);
-                startActivity(i);
-                finish();
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (prevMenuItem != null) {
+                    prevMenuItem.setChecked(false);
+                }
+                else
+                {
+                    bottomNavigationView.getMenu().getItem(0).setChecked(false);
+                }
+                Log.d("page", "onPageSelected: "+position);
+                bottomNavigationView.getMenu().getItem(position).setChecked(true);
+                prevMenuItem = bottomNavigationView.getMenu().getItem(position);
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        bottomNavigationView.setSelectedItemId(R.id.sturrd_explore);
+        locationUpdate();
+        requestPermissions();
+        setupViewPager(viewPager);
+
+    }
+
+
+
+    public void locationUpdate() {
+        if (ActivityCompat.checkSelfPermission(MainActivity.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        client.getLastLocation().addOnSuccessListener(MainActivity.this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+
+                if (location != null) {
+                    final double longitude = location.getLongitude();
+                    final double latitude = location.getLatitude();
+
+                    String latitudeString = String.valueOf(latitude);
+                    String longitudeString = String.valueOf(longitude);
+
+                    //usersDb.child("latitude").child(latitudeString).setValue(true);
+                    //usersDb.child("longitude").child(longitudeString).setValue(true);
+
+                    Map userLatLng = new HashMap();
+                    userLatLng.put("latitude", latitudeString);
+                    userLatLng.put("longitude", longitudeString);
+
+
+                    usersDb.child(currentUId).child("LatLng").updateChildren(userLatLng);
+                }
+
+            }
+        });
+    }
+
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION}, 1);
+
+    }
+
+    private void setupViewPager(ViewPager viewPager)
+    {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        datesFragment = new DatesFragment();
+        requestsFragment = new RequestsFragment();
+        exploreFragment = new ExploreFragment();
+        userFragment = new UserFragment();
+        messagesFragment = new MessagesFragment();
+        adapter.addFragment(userFragment, "Profile");
+        adapter.addFragment(requestsFragment, "Requests");
+        adapter.addFragment(exploreFragment, "Explore");
+        adapter.addFragment(datesFragment, "Dates");
+        adapter.addFragment(messagesFragment,"Messages");
+        viewPager.setAdapter(adapter);
+    }
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            //return mFragmentTitleList.get(position);
+            return null;
+        }
+    }
+
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.sturrd_explore:
+                viewPager.setCurrentItem(2);
+                break;
+
+            case R.id.sturrd_dates:
+                viewPager.setCurrentItem(3);
+                break;
+
+            case R.id.sturrd_profile:
+                viewPager.setCurrentItem(0);
+                break;
+
+            case R.id.sturrd_messages:
+                viewPager.setCurrentItem(4);
+                break;
+            case R.id.sturrd_requests:
+                viewPager.setCurrentItem(1);
+                break;
+        }
+
+        return false;
     }
 }

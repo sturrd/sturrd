@@ -11,4 +11,7 @@
 
     <color name="red_300">#E57373</color>
     <color name="red_400">#EF5350</color>
+
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack">#2d2d2d</color>
 </resources>

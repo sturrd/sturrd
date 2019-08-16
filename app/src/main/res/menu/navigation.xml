@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/sturrd_profile"
+        android:icon="@drawable/ic_tab_user"
+        android:title="Profile" />
+
+    <item
+        android:id="@+id/sturrd_requests"
+        android:icon="@drawable/ic_requests"
+        android:title="Explore" />
+    <item
+        android:id="@+id/sturrd_explore"
+        android:icon="@drawable/ic_explore"
+        android:title="Sturrd" />
+
+    <item
+        android:id="@+id/sturrd_dates"
+        android:icon="@drawable/ic_dates"
+        android:title="Matches" />
+
+    <item
+        android:id="@+id/sturrd_messages"
+        android:icon="@drawable/ic_chats_new"
+        android:title="Messages" />
+
+
+
+</menu>
