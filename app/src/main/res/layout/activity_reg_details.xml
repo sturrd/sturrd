@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="40dp">
+
+    <ImageView
+        android:id="@+id/profile_image"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginBottom="5dp"
+        android:src="@drawable/ic_pic_upload"/>
+    <TextView
+        android:id="@+id/choose_pic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:text="@string/choose_profile_picture"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="#cccccc"
+        app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout"
+        >
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/black"
+            android:drawableLeft="@drawable/ic_user"
+            android:drawableTint="@color/colorPrimary"
+            android:hint="     Name"
+            android:inputType="textEmailAddress"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/black"
+            android:textSize="20sp" />
+
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="#cccccc"
+        app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColorHint="#cccccc"
+        app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout"/>
+
+
+
+    <co.ceryle.radiorealbutton.RadioRealButtonGroup
+        android:id="@+id/radioRealButtonGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        app:rrbg_animateDrawables_enter="overshoot"
+        app:rrbg_animateDrawables_enterDuration="500"
+        app:rrbg_animateDrawables_exit="overshoot"
+        app:rrbg_animateDrawables_exitDuration="500"
+        app:rrbg_animateDrawables_scale="1.2"
+        app:rrbg_animateTexts_enter="overshoot"
+        app:rrbg_animateTexts_enterDuration="500"
+        app:rrbg_backgroundColor="@android:color/transparent"
+        app:rrbg_bottomLineColor="@color/colorPrimary"
+        app:rrbg_buttonsPaddingBottom="5sp"
+        app:rrbg_buttonsPaddingTop="14dp"
+        app:rrbg_selectorAboveOfBottomLine="false"
+        app:rrbg_selectorColor="@color/colorPrimary"
+        app:rrbg_selectorDividerPadding="20sp"
+        app:rrbg_selectorSize="3dp"
+        app:rrbg_selectorTop="false">
+        <co.ceryle.radiorealbutton.RadioRealButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:rrb_drawable="@drawable/ic_male"
+            app:rrb_drawableGravity="top"
+            app:rrb_drawableHeight="40dp"
+            app:rrb_drawableTint="@color/colorPrimary"
+            app:rrb_drawableWidth="40dp"
+            app:rrb_rippleColor="@color/colorPrimary"
+            app:rrb_text="Male"
+            app:rrb_textColor="@color/colorPrimary"
+            app:rrb_textSize="12sp"/>
+        <co.ceryle.radiorealbutton.RadioRealButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:rrb_drawable="@drawable/ic_female"
+            app:rrb_drawableGravity="top"
+            app:rrb_drawableHeight="40dp"
+            app:rrb_drawableTint="@color/colorPrimary"
+            app:rrb_drawableWidth="40dp"
+            app:rrb_rippleColor="@color/colorPrimary"
+            app:rrb_text="Female"
+            app:rrb_textColor="@color/colorPrimary"
+            app:rrb_textSize="12sp"/>
+    </co.ceryle.radiorealbutton.RadioRealButtonGroup>
+
+
+    <Button
+        android:id="@+id/register"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/ic_btn_round_gradient"
+        android:text="Register"
+        android:textColor="@android:color/white" />
+
+</LinearLayout>

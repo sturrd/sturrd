@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    tools:context=".AuthActivity">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="102dp"
+        android:layout_height="95dp"
+        android:layout_marginTop="86dp"
+        android:layout_marginBottom="27dp"
+        android:src="@drawable/ic_logo" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="51dp"
+        android:text="Verify your number"
+        android:textColor="@android:color/black"
+        android:textSize="36sp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_marginBottom="50dp"
+        android:layout_height="wrap_content">
+
+        <com.rilixtech.CountryCodePicker
+            android:id="@+id/ccp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:layout_gravity="center_vertical"
+            android:hint="@string/_234"
+            android:inputType="phone"
+            android:textSize="24sp"
+            app:ccp_defaultCode="234"
+            app:ccp_defaultNameCode="NG"
+            />
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edtPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_your_phone_number"
+            android:layout_marginEnd="7dp"
+            android:layout_marginRight="7dp"
+            android:ems="10"
+            android:textSize="18sp"
+            android:inputType="phone"/>
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btnContinue"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/ic_btn_round_gradient"
+        android:text="@string/continue_"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+         />
+
+    <TextView
+        android:id="@+id/email_signin"
+        android:onClick="onEmailClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:textSize="14sp"
+        android:text="@string/sign_in_with_email"/>
+</LinearLayout>

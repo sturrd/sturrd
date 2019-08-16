@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/white"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="40dp"
+    android:id="@+id/layout">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_logo" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:textColorHint="#cccccc"
+        app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_email"
+            android:hint="     Email"
+            android:id="@+id/email"
+            android:inputType="textEmailAddress"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColorHint="#cccccc"
+        app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_password"
+            android:hint="     Password"
+            android:id="@+id/password"
+            android:inputType="textPassword"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="16dp"
+        android:text="Forgot Password?"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:id="@+id/forgotButton"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@color/colorAccent"
+        android:text="Log In"
+        android:id="@+id/login"
+        android:textColor="@android:color/white" />
+
+</LinearLayout>

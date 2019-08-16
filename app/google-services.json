@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "135111407154",
+    "firebase_url": "https://sturrd-87146.firebaseio.com",
+    "project_id": "sturrd-87146",
+    "storage_bucket": "sturrd-87146.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:135111407154:android:847fdf1ee52dd0ac",
+        "android_client_info": {
+          "package_name": "com.sturrd.sturrd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "135111407154-o9r0b81jahsnu4s6dprhitp93di8775q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sturrd.sturrd",
+            "certificate_hash": "b2fb9ee824a9dbb4038d445b22f0ed517ee0afe2"
+          }
+        },
+        {
+          "client_id": "135111407154-d8sor5482l0ss15f40vcmivocp3lcv9l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAABSJ8p5a215WYpATniGHzRlgyvqdrMbU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "135111407154-d8sor5482l0ss15f40vcmivocp3lcv9l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
