@@ -25,7 +25,7 @@
                 android:id="@+id/profileImage"
                 android:layout_width="150sp"
                 android:layout_height="150sp"
-                android:background="@mipmap/ic_pic_upload" />
+                android:background="@drawable/ic_pic_upload" />
 
             <TextView
                 android:id="@+id/name"

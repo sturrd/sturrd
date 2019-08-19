@@ -19,7 +19,7 @@
     <item
         android:id="@+id/sturrd_dates"
         android:icon="@drawable/ic_dates"
-        android:title="Matches" />
+        android:title="Dates" />
 
     <item
         android:id="@+id/sturrd_messages"

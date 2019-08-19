@@ -12,7 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EmailSignin"></activity>
+        <meta-data
+            android:name="com.google.android.actions"
+            android:resource="@xml/selector" />
+
+        <activity android:name=".EmailSignin" />
         <activity android:name=".MainActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".VerifyActivity" />

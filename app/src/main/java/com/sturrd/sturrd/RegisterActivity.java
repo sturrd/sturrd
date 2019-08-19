@@ -149,11 +149,6 @@ public class RegisterActivity extends AppCompatActivity {
                             });
                         }
                     });
-                }else{
-                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(i);
-                    finish();
                 }
 
 
@@ -171,6 +166,10 @@ public class RegisterActivity extends AppCompatActivity {
                         userInfo.put("interest", "Male");
                         break;
                 }
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i);
+                finish();
 
                 currentUserDb.updateChildren(userInfo);
                 locationUpdate();

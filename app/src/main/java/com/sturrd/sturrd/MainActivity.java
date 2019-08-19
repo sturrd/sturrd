@@ -14,9 +14,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+import com.mapbox.mapboxsdk.Mapbox;
 import com.sturrd.sturrd.Fragments.DatesFragment;
 import com.sturrd.sturrd.Fragments.ExploreFragment;
 import com.sturrd.sturrd.Fragments.MessagesFragment;
+
 import com.sturrd.sturrd.Fragments.RequestsFragment;
 import com.sturrd.sturrd.Fragments.UserFragment;
 
@@ -36,7 +39,7 @@ import androidx.viewpager.widget.ViewPager;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
-    private BottomNavigationView bottomNavigationView;
+    private BottomNavigationViewEx bottomNavigationView;
     private String currentUId;
     ViewPager viewPager;
     private DatabaseReference usersDb, instanceDb;
@@ -57,10 +60,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         //save the notificationID to the database
 
         viewPager = findViewById(R.id.viewpager);
+        Mapbox.getInstance(this, "pk.eyJ1Ijoic2VydmlpZSIsImEiOiJjamxyNTJhOGMwMWJyM3B0MnJtbzBvdng2In0.EhwW9ia4lNt40wzDYfIsBQ");
+
 
 
         client = LocationServices.getFusedLocationProviderClient(this);
         bottomNavigationView = findViewById(R.id.navigation);
+
+        bottomNavigationView.enableItemShiftingMode(false);
+        bottomNavigationView.enableAnimation(false);
 
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

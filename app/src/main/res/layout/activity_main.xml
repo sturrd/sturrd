@@ -2,8 +2,8 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
     <FrameLayout
         android:id="@+id/fragment_container"
@@ -14,12 +14,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:layout_above="@+id/bottom_navigation"
-        android:background="@color/colorBlack"/>
-
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager"
@@ -28,16 +22,17 @@
         android:layout_above="@+id/bottom_navigation"
         android:layout_alignParentTop="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
         android:id="@+id/navigation"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|center"
-        android:layout_height="60dp"
-        app:itemIconTint="@color/colorPrimary"
-        app:itemTextColor="@color/colorPrimary"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        android:background="@color/colorWhite"
-        app:menu="@menu/navigation" />
+        android:background="@android:color/white"
+        app:itemIconTint="@xml/selector"
+        app:itemTextColor="@xml/selector"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/navigation"/>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
