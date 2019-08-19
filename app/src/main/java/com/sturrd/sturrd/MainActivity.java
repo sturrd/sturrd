@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private BottomNavigationViewEx bottomNavigationView;
     private String currentUId;
     ViewPager viewPager;
+    FirebaseAuth mAuth;
     private DatabaseReference usersDb, instanceDb;
     private FusedLocationProviderClient client;
     MessagesFragment messagesFragment;
@@ -62,7 +63,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         viewPager = findViewById(R.id.viewpager);
         Mapbox.getInstance(this, "pk.eyJ1Ijoic2VydmlpZSIsImEiOiJjamxyNTJhOGMwMWJyM3B0MnJtbzBvdng2In0.EhwW9ia4lNt40wzDYfIsBQ");
 
+        mAuth = FirebaseAuth.getInstance();
+        currentUId = mAuth.getCurrentUser().getUid();
 
+        usersDb = FirebaseDatabase.getInstance().getReference().child("Users");
 
         client = LocationServices.getFusedLocationProviderClient(this);
         bottomNavigationView = findViewById(R.id.navigation);
