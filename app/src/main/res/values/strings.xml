@@ -32,4 +32,6 @@
     <string name="title_notifications">Notifications</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="title_activity_explore_screen">Explore</string>
+    <string name="mapbox_key">pk.eyJ1Ijoic2VydmlpZSIsImEiOiJjamxyNTJhOGMwMWJyM3B0MnJtbzBvdng2In0.EhwW9ia4lNt40wzDYfIsBQ</string>
+    <string name="dating_locations_in_5km">Dating Locations in \n 5km</string>
 </resources>

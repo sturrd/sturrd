@@ -3,18 +3,15 @@
 
 
     <item
-        android:id="@+id/sturrd_profile"
-        android:icon="@drawable/ic_tab_user"
-        android:title="Profile" />
+        android:id="@+id/sturrd_explore"
+        android:icon="@drawable/ic_explore"
+        android:title="Explore" />
 
     <item
         android:id="@+id/sturrd_requests"
         android:icon="@drawable/ic_requests"
         android:title="Requests" />
-    <item
-        android:id="@+id/sturrd_explore"
-        android:icon="@drawable/ic_explore"
-        android:title="Explore" />
+
 
     <item
         android:id="@+id/sturrd_dates"
@@ -25,6 +22,11 @@
         android:id="@+id/sturrd_messages"
         android:icon="@drawable/ic_chats_new"
         android:title="Messages" />
+
+    <item
+        android:id="@+id/sturrd_profile"
+        android:icon="@drawable/ic_tab_user"
+        android:title="Profile" />
 
 
 

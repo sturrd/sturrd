@@ -12,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="40sp"
-        android:paddingBottom="40sp">
+        android:paddingTop="40dp"
+        android:paddingBottom="40dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,8 +23,8 @@
 
             <ImageView
                 android:id="@+id/profileImage"
-                android:layout_width="150sp"
-                android:layout_height="150sp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:background="@drawable/ic_pic_upload" />
 
             <TextView

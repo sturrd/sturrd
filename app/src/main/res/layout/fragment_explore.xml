@@ -8,17 +8,46 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.ExploreFragment">
 
-    <com.mapbox.mapboxsdk.maps.MapView
-        android:id="@+id/mapView"
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/frg"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        mapbox:mapbox_cameraTargetLat="40.73581"
-        mapbox:mapbox_cameraTargetLng="-73.99155"
-        mapbox:mapbox_cameraZoom="11" />
+        tools:context=".ExploreScreen" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="40dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="30sp"
+            android:layout_marginLeft="10dp"
+            android:paddingBottom="5sp"
+            android:text="@string/dating_locations_in_5km"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/dating_locations_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:scrollbars="horizontal"/>
+        <TextView
+            android:id="@+id/textViewName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textAlignment="center" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_gravity="top|center"
         android:background="@drawable/ic_search_bg"
@@ -36,13 +65,13 @@
 
 
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_width="240dp"
+            android:layout_height="65dp"
+            android:paddingTop="5dp"
             android:backgroundTint="@android:color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </LinearLayout>
-
 
 </FrameLayout>

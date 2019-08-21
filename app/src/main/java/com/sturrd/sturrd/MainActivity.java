@@ -15,7 +15,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
-import com.mapbox.mapboxsdk.Mapbox;
 import com.sturrd.sturrd.Fragments.DatesFragment;
 import com.sturrd.sturrd.Fragments.ExploreFragment;
 import com.sturrd.sturrd.Fragments.MessagesFragment;
@@ -61,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         //save the notificationID to the database
 
         viewPager = findViewById(R.id.viewpager);
-        Mapbox.getInstance(this, "pk.eyJ1Ijoic2VydmlpZSIsImEiOiJjamxyNTJhOGMwMWJyM3B0MnJtbzBvdng2In0.EhwW9ia4lNt40wzDYfIsBQ");
 
         mAuth = FirebaseAuth.getInstance();
         currentUId = mAuth.getCurrentUser().getUid();
@@ -103,7 +101,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         });
 
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-        bottomNavigationView.setSelectedItemId(R.id.sturrd_explore);
         locationUpdate();
         requestPermissions();
         setupViewPager(viewPager);
@@ -162,11 +159,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         exploreFragment = new ExploreFragment();
         userFragment = new UserFragment();
         messagesFragment = new MessagesFragment();
-        adapter.addFragment(userFragment, "Profile");
-        adapter.addFragment(requestsFragment, "Requests");
         adapter.addFragment(exploreFragment, "Explore");
+        adapter.addFragment(requestsFragment, "Requests");
         adapter.addFragment(datesFragment, "Dates");
         adapter.addFragment(messagesFragment,"Messages");
+        adapter.addFragment(userFragment, "Profile");
         viewPager.setAdapter(adapter);
     }
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -205,23 +202,24 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         switch (item.getItemId()) {
             case R.id.sturrd_explore:
-                viewPager.setCurrentItem(2);
-                break;
-
-            case R.id.sturrd_dates:
-                viewPager.setCurrentItem(3);
-                break;
-
-            case R.id.sturrd_profile:
                 viewPager.setCurrentItem(0);
                 break;
 
-            case R.id.sturrd_messages:
+            case R.id.sturrd_dates:
+                viewPager.setCurrentItem(2);
+                break;
+
+            case R.id.sturrd_profile:
                 viewPager.setCurrentItem(4);
+                break;
+
+            case R.id.sturrd_messages:
+                viewPager.setCurrentItem(3);
                 break;
             case R.id.sturrd_requests:
                 viewPager.setCurrentItem(1);
                 break;
+
         }
 
         return false;
