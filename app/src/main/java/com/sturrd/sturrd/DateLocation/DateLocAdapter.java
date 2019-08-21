@@ -52,13 +52,11 @@ public class DateLocAdapter extends RecyclerView.Adapter<DateLocAdapter.ViewHold
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView textViewName;
         public ImageView imageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            textViewName = (TextView) itemView.findViewById(R.id.textViewName);
             imageView = (ImageView) itemView.findViewById(R.id.img_location_date_card);
         }
     }
