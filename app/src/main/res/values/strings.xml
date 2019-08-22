@@ -34,4 +34,7 @@
     <string name="title_activity_explore_screen">Explore</string>
     <string name="mapbox_key">pk.eyJ1Ijoic2VydmlpZSIsImEiOiJjamxyNTJhOGMwMWJyM3B0MnJtbzBvdng2In0.EhwW9ia4lNt40wzDYfIsBQ</string>
     <string name="dating_locations_in_5km">Dating Locations in \n 5km</string>
+    <string name="discover_new_people">Discover new people</string>
+    <string name="there_are_no_requests">There are no requests</string>
+    <string name="there_are_no_dates">There are no dates</string>
 </resources>

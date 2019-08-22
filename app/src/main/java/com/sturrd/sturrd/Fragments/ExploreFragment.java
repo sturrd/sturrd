@@ -188,6 +188,10 @@ public class ExploreFragment extends Fragment {
                             userLatLng.put("latitude", latitudeString);
                             userLatLng.put("longitude", longitudeString);
 
+                            DatabaseReference mLatLng = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserID);
+
+                            mLatLng.updateChildren(userLatLng);
+
                             CameraPosition googlePlex = CameraPosition.builder()
                                     .target(new LatLng(latitude, longitude))
                                     .zoom(17)
