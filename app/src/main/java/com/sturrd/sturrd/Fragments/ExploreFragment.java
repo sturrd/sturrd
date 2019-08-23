@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -23,9 +22,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
-import com.bumptech.glide.load.resource.bitmap.TransformationUtils;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
@@ -55,8 +51,6 @@ import com.sturrd.sturrd.DateLocation.DateLocObject;
 import com.sturrd.sturrd.LatLngObject;
 import com.sturrd.sturrd.R;
 
-import java.net.URL;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -235,34 +229,10 @@ public class ExploreFragment extends Fragment {
                                                           public boolean onResourceReady(Bitmap bitmap, Object o, Target<Bitmap> target, DataSource dataSource, boolean b) {
                                                               mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 10000, null);
 
-                                                              int w = bitmap.getWidth();
-                                                              int h = bitmap.getHeight();
-
-                                                              int radius = Math.min(h / 2, w / 2);
-                                                              Bitmap output = Bitmap.createBitmap(w + 8, h + 8, Bitmap.Config.ARGB_8888);
-
-                                                              Paint p = new Paint();
-                                                              p.setAntiAlias(true);
-
-                                                              Canvas c = new Canvas(output);
-                                                              c.drawARGB(0, 0, 0, 0);
-                                                              p.setStyle(Paint.Style.FILL);
-
-                                                              c.drawCircle((w / 2) + 4, (h / 2) + 4, radius, p);
-
-                                                              p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-
-                                                              c.drawBitmap(bitmap, 4, 4, p);
-                                                              p.setXfermode(null);
-                                                              p.setStyle(Paint.Style.STROKE);
-                                                              p.setColor(Color.parseColor("#9EFF4664"));
-                                                              p.setStrokeWidth(10);
-                                                              c.drawCircle((w / 2) + 4, (h / 2) + 4, radius, p);
-
                                                               mMap.addMarker(new MarkerOptions()
                                                                       .position(new LatLng(latitude, longitude))
                                                                       .title("Me")
-                                                                      .icon(BitmapDescriptorFactory.fromBitmap(output)));
+                                                                      .icon(BitmapDescriptorFactory.fromBitmap(BitmapMarker(bitmap))));
                                                               return false;
                                                           }
                                                       }
@@ -307,36 +277,13 @@ public class ExploreFragment extends Fragment {
                                                   @Override
                                                   public boolean onResourceReady(Bitmap bitmap, Object o, Target<Bitmap> target, DataSource dataSource, boolean b) {
 
-                                                      int w = bitmap.getWidth();
-                                                      int h = bitmap.getHeight();
 
-                                                      int radius = Math.min(h / 2, w / 2);
-                                                      Bitmap output = Bitmap.createBitmap(w + 8, h + 8, Bitmap.Config.ARGB_8888);
-
-                                                      Paint p = new Paint();
-                                                      p.setAntiAlias(true);
-
-                                                      Canvas c = new Canvas(output);
-                                                      c.drawARGB(0, 0, 0, 0);
-                                                      p.setStyle(Paint.Style.FILL);
-
-                                                      c.drawCircle((w / 2) + 4, (h / 2) + 4, radius, p);
-
-                                                      p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-
-                                                      c.drawBitmap(bitmap, 4, 4, p);
-                                                      p.setXfermode(null);
-                                                      p.setStyle(Paint.Style.STROKE);
-                                                      p.setColor(Color.parseColor("#9EFF4664"));
-                                                      p.setStrokeWidth(10);
-                                                      //p.setShadowLayer(12, 0, 0, Color.parseColor("#CE504F4F"));
-                                                      c.drawCircle((w / 2) + 4, (h / 2) + 4, radius, p);
 
 
                                                       mMap.addMarker(new MarkerOptions()
                                                               .position(location)
                                                               .title(user.name)
-                                                              .icon(BitmapDescriptorFactory.fromBitmap(output)));
+                                                              .icon(BitmapDescriptorFactory.fromBitmap(BitmapMarker(bitmap))));
                                                       return false;
                                                   }
                                               }
@@ -362,6 +309,35 @@ public class ExploreFragment extends Fragment {
 
 
         return view;
+    }
+
+    public Bitmap BitmapMarker(Bitmap bitmap){
+        int w = bitmap.getWidth();
+        int h = bitmap.getHeight();
+
+        int radius = Math.min(h / 2, w / 2);
+        Bitmap output = Bitmap.createBitmap(w + 8, h + 8, Bitmap.Config.ARGB_8888);
+
+        Paint p = new Paint();
+        p.setAntiAlias(true);
+
+        Canvas c = new Canvas(output);
+        c.drawARGB(0, 0, 0, 0);
+        p.setStyle(Paint.Style.FILL);
+
+        c.drawCircle((w / 2) + 4, (h / 2) + 4, radius, p);
+
+        p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+
+        c.drawBitmap(bitmap, 4, 4, p);
+        p.setXfermode(null);
+        p.setStyle(Paint.Style.STROKE);
+        p.setColor(Color.parseColor("#9EFF4664"));
+        p.setStrokeWidth(10);
+        //p.setShadowLayer(12, 0, 0, Color.parseColor("#CE504F4F"));
+        c.drawCircle((w / 2) + 4, (h / 2) + 4, radius, p);
+
+        return output;
     }
 
 
