@@ -5,7 +5,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
@@ -13,7 +18,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+import com.bumptech.glide.load.resource.bitmap.TransformationUtils;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -40,11 +55,15 @@ import com.sturrd.sturrd.DateLocation.DateLocObject;
 import com.sturrd.sturrd.LatLngObject;
 import com.sturrd.sturrd.R;
 
+import java.net.URL;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -61,7 +80,7 @@ public class ExploreFragment extends Fragment {
     private RecyclerView.Adapter adapter;
 
     //database reference
-    private DatabaseReference mPlaces, placesDb;
+    private DatabaseReference mPlaces, placesDb, usersDb;
 
     //progress dialog
     private ProgressDialog progressDialog;
@@ -98,6 +117,7 @@ public class ExploreFragment extends Fragment {
 
 
         mPlaces = FirebaseDatabase.getInstance().getReference("Places");
+        usersDb = FirebaseDatabase.getInstance().getReference("Users");
         placesDb = FirebaseDatabase.getInstance().getReference("Places");
         mPlaces.push().setValue(marker);
         currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -171,6 +191,7 @@ public class ExploreFragment extends Fragment {
 
                 mMap.clear(); //clear old markers
 
+
                 client.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
@@ -189,32 +210,137 @@ public class ExploreFragment extends Fragment {
                             userLatLng.put("longitude", longitudeString);
 
                             DatabaseReference mLatLng = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserID);
-
                             mLatLng.updateChildren(userLatLng);
 
-                            CameraPosition googlePlex = CameraPosition.builder()
-                                    .target(new LatLng(latitude, longitude))
-                                    .zoom(17)
-                                    .bearing(0)
-                                    .build();
+                            mLatLng.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    String profileImageUrl = dataSnapshot.child("profileImageUrl").getValue().toString();
+                                    final CameraPosition googlePlex = CameraPosition.builder()
+                                            .target(new LatLng(latitude, longitude))
+                                            .zoom(17)
+                                            .bearing(0)
+                                            .build();
 
-                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 10000, null);
+                                    Glide.with(getContext())
+                                            .asBitmap().load(profileImageUrl).apply(RequestOptions.circleCropTransform().override(150, 150))
+                                            .listener(new RequestListener<Bitmap>() {
+                                                          @Override
+                                                          public boolean onLoadFailed(@Nullable GlideException e, Object o, Target<Bitmap> target, boolean b) {
+                                                              Toast.makeText(getContext(),getResources().getString(R.string.unexpected_error_occurred_try_again),Toast.LENGTH_SHORT).show();
+                                                              return false;
+                                                          }
 
-                            mMap.addMarker(new MarkerOptions()
-                                    .position(new LatLng(latitude, longitude))
-                                    .icon(bitmapDescriptorFromVector(getContext(), R.drawable.ic_blue_dot)));
+                                                          @Override
+                                                          public boolean onResourceReady(Bitmap bitmap, Object o, Target<Bitmap> target, DataSource dataSource, boolean b) {
+                                                              mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 10000, null);
+
+                                                              int w = bitmap.getWidth();
+                                                              int h = bitmap.getHeight();
+
+                                                              int radius = Math.min(h / 2, w / 2);
+                                                              Bitmap output = Bitmap.createBitmap(w + 8, h + 8, Bitmap.Config.ARGB_8888);
+
+                                                              Paint p = new Paint();
+                                                              p.setAntiAlias(true);
+
+                                                              Canvas c = new Canvas(output);
+                                                              c.drawARGB(0, 0, 0, 0);
+                                                              p.setStyle(Paint.Style.FILL);
+
+                                                              c.drawCircle((w / 2) + 4, (h / 2) + 4, radius, p);
+
+                                                              p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+
+                                                              c.drawBitmap(bitmap, 4, 4, p);
+                                                              p.setXfermode(null);
+                                                              p.setStyle(Paint.Style.STROKE);
+                                                              p.setColor(Color.parseColor("#9EFF4664"));
+                                                              p.setStrokeWidth(10);
+                                                              c.drawCircle((w / 2) + 4, (h / 2) + 4, radius, p);
+
+                                                              mMap.addMarker(new MarkerOptions()
+                                                                      .position(new LatLng(latitude, longitude))
+                                                                      .title("Me")
+                                                                      .icon(BitmapDescriptorFactory.fromBitmap(output)));
+                                                              return false;
+                                                          }
+                                                      }
+                                            ).submit();
+
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
+
+
+
+
 
 
                         }
                     }
                 });
-                mPlaces.addListenerForSingleValueEvent(new ValueEventListener() {
+                usersDb.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot s : dataSnapshot.getChildren()){
-                            LatLngObject user = s.getValue(LatLngObject.class);
-                            LatLng location=new LatLng(user.Latitude, user.Longitude);
-                            mMap.addMarker(new MarkerOptions().position(location).title(user.name)).setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_marker));
+                            final LatLngObject user = s.getValue(LatLngObject.class);
+                            final LatLng location=new LatLng(user.Latitude, user.Longitude);
+                            String profileImageUrl = user.profileImageUrl;
+
+                            Glide.with(getContext())
+                                    .asBitmap().load(profileImageUrl).apply(RequestOptions.circleCropTransform().override(150, 150))
+                                    .listener(new RequestListener<Bitmap>() {
+                                                  @Override
+                                                  public boolean onLoadFailed(@Nullable GlideException e, Object o, Target<Bitmap> target, boolean b) {
+                                                      Toast.makeText(getContext(),getResources().getString(R.string.unexpected_error_occurred_try_again),Toast.LENGTH_SHORT).show();
+                                                      return false;
+                                                  }
+
+                                                  @Override
+                                                  public boolean onResourceReady(Bitmap bitmap, Object o, Target<Bitmap> target, DataSource dataSource, boolean b) {
+
+                                                      int w = bitmap.getWidth();
+                                                      int h = bitmap.getHeight();
+
+                                                      int radius = Math.min(h / 2, w / 2);
+                                                      Bitmap output = Bitmap.createBitmap(w + 8, h + 8, Bitmap.Config.ARGB_8888);
+
+                                                      Paint p = new Paint();
+                                                      p.setAntiAlias(true);
+
+                                                      Canvas c = new Canvas(output);
+                                                      c.drawARGB(0, 0, 0, 0);
+                                                      p.setStyle(Paint.Style.FILL);
+
+                                                      c.drawCircle((w / 2) + 4, (h / 2) + 4, radius, p);
+
+                                                      p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+
+                                                      c.drawBitmap(bitmap, 4, 4, p);
+                                                      p.setXfermode(null);
+                                                      p.setStyle(Paint.Style.STROKE);
+                                                      p.setColor(Color.parseColor("#9EFF4664"));
+                                                      p.setStrokeWidth(10);
+                                                      //p.setShadowLayer(12, 0, 0, Color.parseColor("#CE504F4F"));
+                                                      c.drawCircle((w / 2) + 4, (h / 2) + 4, radius, p);
+
+
+                                                      mMap.addMarker(new MarkerOptions()
+                                                              .position(location)
+                                                              .title(user.name)
+                                                              .icon(BitmapDescriptorFactory.fromBitmap(output)));
+                                                      return false;
+                                                  }
+                                              }
+                                    ).submit();
                         }
                     }
 
@@ -257,6 +383,10 @@ public class ExploreFragment extends Fragment {
 
         return resultsPlaceImages;
     }
+
+
+
+
 
 
 }

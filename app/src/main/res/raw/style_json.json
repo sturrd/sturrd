@@ -8,6 +8,14 @@
     ]
   },
   {
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#edf3f5"
+      }
+    ]
+  },
+  {
     "elementType": "labels.icon",
     "stylers": [
       {
@@ -45,7 +53,7 @@
     "elementType": "geometry",
     "stylers": [
       {
-        "color": "#eeeeee"
+        "color": "#edf3f5"
       }
     ]
   },
