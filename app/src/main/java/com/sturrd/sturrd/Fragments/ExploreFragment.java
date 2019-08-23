@@ -278,14 +278,27 @@ public class ExploreFragment extends Fragment {
                                                   public boolean onResourceReady(Bitmap bitmap, Object o, Target<Bitmap> target, DataSource dataSource, boolean b) {
 
 
-
-
                                                       mMap.addMarker(new MarkerOptions()
                                                               .position(location)
                                                               .title(user.name)
                                                               .icon(BitmapDescriptorFactory.fromBitmap(BitmapMarker(bitmap))));
+
+                                                      mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                                                          @Override
+                                                          public boolean onMarkerClick(Marker marker) {
+
+
+
+                                                              return false;
+                                                          }
+                                                      });
                                                       return false;
+
+
                                                   }
+
+
+
                                               }
                                     ).submit();
                         }
