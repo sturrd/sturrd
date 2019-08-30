@@ -60,61 +60,17 @@
 
 
 
-    <co.ceryle.radiorealbutton.RadioRealButtonGroup
-        android:id="@+id/radioRealButtonGroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        app:rrbg_animateDrawables_enter="overshoot"
-        app:rrbg_animateDrawables_enterDuration="500"
-        app:rrbg_animateDrawables_exit="overshoot"
-        app:rrbg_animateDrawables_exitDuration="500"
-        app:rrbg_animateDrawables_scale="1.2"
-        app:rrbg_animateTexts_enter="overshoot"
-        app:rrbg_animateTexts_enterDuration="500"
-        app:rrbg_backgroundColor="@android:color/transparent"
-        app:rrbg_bottomLineColor="@color/colorPrimary"
-        app:rrbg_buttonsPaddingBottom="5sp"
-        app:rrbg_buttonsPaddingTop="14dp"
-        app:rrbg_selectorAboveOfBottomLine="false"
-        app:rrbg_selectorColor="@color/colorPrimary"
-        app:rrbg_selectorDividerPadding="20sp"
-        app:rrbg_selectorSize="3dp"
-        app:rrbg_selectorTop="false">
-        <co.ceryle.radiorealbutton.RadioRealButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:rrb_drawable="@drawable/ic_male"
-            app:rrb_drawableGravity="top"
-            app:rrb_drawableHeight="40dp"
-            app:rrb_drawableTint="@color/colorPrimary"
-            app:rrb_drawableWidth="40dp"
-            app:rrb_rippleColor="@color/colorPrimary"
-            app:rrb_text="Male"
-            app:rrb_textColor="@color/colorPrimary"
-            app:rrb_textSize="12sp"/>
-        <co.ceryle.radiorealbutton.RadioRealButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:rrb_drawable="@drawable/ic_female"
-            app:rrb_drawableGravity="top"
-            app:rrb_drawableHeight="40dp"
-            app:rrb_drawableTint="@color/colorPrimary"
-            app:rrb_drawableWidth="40dp"
-            app:rrb_rippleColor="@color/colorPrimary"
-            app:rrb_text="Female"
-            app:rrb_textColor="@color/colorPrimary"
-            app:rrb_textSize="12sp"/>
-    </co.ceryle.radiorealbutton.RadioRealButtonGroup>
-
-
     <Button
         android:id="@+id/register"
         android:layout_width="200dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="15dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="33dp"
+        android:layout_marginBottom="101dp"
         android:background="@drawable/ic_btn_round_gradient"
-        android:text="Register"
-        android:textColor="@android:color/white" />
+        android:elevation="5dp"
+        android:text="@string/continue_"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="21sp" />
 
 </LinearLayout>

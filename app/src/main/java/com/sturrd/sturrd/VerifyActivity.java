@@ -82,9 +82,6 @@ public class VerifyActivity extends AppCompatActivity {
     private void verifyCode(String code) {
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
         signInWithCredential(credential);
-
-        Intent intent = new Intent(VerifyActivity.this, RegisterActivity.class);
-        startActivity(intent);
     }
 
     private void signInWithCredential(PhoneAuthCredential credential) {

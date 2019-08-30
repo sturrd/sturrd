@@ -90,6 +90,7 @@ public class EmailSignin extends AppCompatActivity {
                             userInfo.put("email", email);
                             userInfo.put("profileImageUrl", "default");
                             currentUserDb.updateChildren(userInfo);
+
                         }
                     }
                 });

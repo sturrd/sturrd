@@ -18,6 +18,8 @@
         map:cameraZoom="15"
         map:mapType="normal"
         tools:context=".ExploreScreen" />
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,6 +34,7 @@
             android:layout_marginLeft="10dp"
             android:paddingBottom="5sp"
             android:text="@string/dating_locations_in_5km"
+            android:fontFamily="@font/helevtica"
             android:textColor="@color/colorAccent"
             android:textStyle="bold" />
 
@@ -43,31 +46,149 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|center"
-        android:background="@drawable/ic_search_bg"
-        android:orientation="horizontal"
-        >
-
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="21dp"
-            android:layout_height="16dp"
-            android:layout_marginStart="35dp"
-            android:layout_marginLeft="35dp"
-            android:layout_marginTop="28dp"
-            app:srcCompat="@drawable/ic_cancel" />
+        android:id="@+id/info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#A9FFFFFF"
+        android:gravity="center"
+        android:orientation="vertical">
 
 
-        <EditText
-            android:layout_width="240dp"
-            android:layout_height="65dp"
-            android:paddingTop="5dp"
-            android:backgroundTint="@android:color/white"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_layout_location_cards"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="5dp">
+
+            <LinearLayout
+                android:id="@+id/layout_dating_cards"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/id_frame_date_loc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+
+                    <ImageView
+                        android:id="@+id/img_location_card"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/img_default" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txt_location_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:fontFamily="@font/helevtica"
+                            android:text=""
+                            android:textColor="@android:color/white"
+                            android:textSize="28sp" />
+
+
+                    </LinearLayout>
+
+
+                    <ImageView
+                        android:id="@+id/btn_cancel"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="top|right"
+                        android:layout_margin="10dp"
+                        android:src="@drawable/ic_close"
+                        android:tint="@android:color/white" />
+                </FrameLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:id="@+id/txt_reviews"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|center"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:drawableLeft="@drawable/ic_dates"
+                        android:drawablePadding="10dp"
+                        android:drawableTint="@color/colorPrimary"
+                        android:fontFamily="@font/helevtica"
+                        android:text="10 reviews"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/helevtica"
+                            android:text="Ratings"
+                            android:textSize="16sp" />
+
+                        <androidx.appcompat.widget.AppCompatRatingBar
+                            android:id="@+id/location_rating_bar"
+                            style="?android:attr/ratingBarStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="2dp"
+                            android:isIndicator="true"
+                            android:numStars="5"
+                            android:rating="4.5"
+                            android:stepSize="0.1" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#D8D8D8" />
+
+                <Button
+                    android:id="@+id/btn_find_request"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/ic_btn_round_gradient"
+                    android:fontFamily="@font/helevtica"
+                    android:text="@string/request_for_a_date"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    app:elevation="5dp" />
+
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 

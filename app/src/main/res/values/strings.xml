@@ -33,9 +33,10 @@
     <string name="edit_profile">Edit Profile</string>
     <string name="title_activity_explore_screen">Explore</string>
     <string name="mapbox_key">pk.eyJ1Ijoic2VydmlpZSIsImEiOiJjamxyNTJhOGMwMWJyM3B0MnJtbzBvdng2In0.EhwW9ia4lNt40wzDYfIsBQ</string>
-    <string name="dating_locations_in_5km">Dating Locations around you</string>
+    <string name="dating_locations_in_5km">Meeting points around you</string>
     <string name="discover_new_people">Discover new people</string>
     <string name="there_are_no_requests">There are no requests</string>
     <string name="there_are_no_dates">There are no dates</string>
     <string name="unexpected_error_occurred_try_again">Unexpected error occurred try again</string>
+    <string name="request_for_a_date">Request for a date</string>
 </resources>

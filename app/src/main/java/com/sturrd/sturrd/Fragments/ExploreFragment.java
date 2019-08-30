@@ -3,6 +3,7 @@ package com.sturrd.sturrd.Fragments;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -17,6 +18,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -35,6 +40,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -46,10 +52,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.sturrd.sturrd.DateLocActivity;
 import com.sturrd.sturrd.DateLocation.DateLocAdapter;
 import com.sturrd.sturrd.DateLocation.DateLocObject;
 import com.sturrd.sturrd.LatLngObject;
 import com.sturrd.sturrd.R;
+import com.sturrd.sturrd.RecyclerTouchListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,31 +74,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 
-public class ExploreFragment extends Fragment {
+public class ExploreFragment extends Fragment implements View.OnClickListener {
 
     private RecyclerView recyclerView;
-
-    //adapter object
+    private ImageView mDateLoc;
+    private TextView mLocationText;
     private RecyclerView.Adapter adapter;
-
-    //database reference
     private DatabaseReference mPlaces, placesDb, usersDb;
-
-    //progress dialog
     private ProgressDialog progressDialog;
-
-    //list to hold all the uploaded images
+    private Button mRequestDate, mCloseInfo;
     private List<DateLocObject> dateLocObjects;
-
+    private String locationId, name, thumbnailUrl;
     private String currentUserID, currentUId;
     private FirebaseAuth mAuth;
     private View view;
     private GoogleMap mMap;
+    private LinearLayout mLayout;
     private RecyclerView mLocationCards;
     private RecyclerView.Adapter mLocationCardsAdapter;
     private FusedLocationProviderClient client;
     private LinearLayoutManager mLocationCardsLayoutManager;
     private ChildEventListener mChildEventListener;
+    private List<DateLocObject> dateLocObject;
     Marker marker;
 
     public ExploreFragment() {
@@ -110,6 +115,22 @@ public class ExploreFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_explore, container, false);
 
 
+        mDateLoc = view.findViewById(R.id.img_location_card);
+
+        mRequestDate = view.findViewById(R.id.btn_find_request);
+        mCloseInfo = view.findViewById(R.id.btn_cancel);
+        mCloseInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLayout.setVisibility(View.GONE);
+            }
+        });
+
+        mLayout = view.findViewById(R.id.card_layout_location_cards);
+
+        mLayout.setVisibility(View.INVISIBLE);
+
+        mLocationText = view.findViewById(R.id.txt_location_name);
         mPlaces = FirebaseDatabase.getInstance().getReference("Places");
         usersDb = FirebaseDatabase.getInstance().getReference("Users");
         placesDb = FirebaseDatabase.getInstance().getReference("Places");
@@ -117,10 +138,13 @@ public class ExploreFragment extends Fragment {
         currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.dating_locations_recycler);
+        recyclerView = view.findViewById(R.id.dating_locations_recycler);
         recyclerView.setHasFixedSize(true);
         mLocationCardsLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(mLocationCardsLayoutManager);
+        recyclerView.setOnClickListener(this);
+
+
 
         progressDialog = new ProgressDialog(getContext());
 
@@ -140,12 +164,28 @@ public class ExploreFragment extends Fragment {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     DateLocObject image = postSnapshot.getValue(DateLocObject.class);
                     dateLocObjects.add(image);
-                }
-                //creating adapter
-                adapter = new DateLocAdapter(getContext(), dateLocObjects);
 
-                //adding adapter to recyclerview
+
+                }
+                adapter = new DateLocAdapter(getContext(), dateLocObjects);
+                recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+                    @Override
+                    public void onClick(View view, int position) {
+                        DateLocObject infoDetails = dateLocObjects.get(position);
+                        mLocationText.setText(infoDetails.getName());
+                        Glide.with(getContext()).load(infoDetails.getImage()).apply(RequestOptions.centerCropTransform()).into(mDateLoc);
+                        mLayout.setVisibility(View.VISIBLE);
+
+                    }
+
+                    @Override
+                    public void onLongClick(View view, int position) {
+
+                    }
+                }));
+
                 recyclerView.setAdapter(adapter);
+
             }
 
             @Override
@@ -188,7 +228,7 @@ public class ExploreFragment extends Fragment {
 
                 client.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
-                    public void onSuccess(Location location) {
+                    public void onSuccess(final Location location) {
                         if (location != null) {
                             final double longitude = location.getLongitude();
                             final double latitude = location.getLatitude();
@@ -210,10 +250,13 @@ public class ExploreFragment extends Fragment {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     String profileImageUrl = dataSnapshot.child("profileImageUrl").getValue().toString();
+
+
                                     final CameraPosition googlePlex = CameraPosition.builder()
                                             .target(new LatLng(latitude, longitude))
-                                            .zoom(17)
-                                            .bearing(0)
+                                            .zoom(16)
+                                            .bearing(location.getBearing())
+                                            .bearing(90)
                                             .build();
 
                                     Glide.with(getContext())
@@ -221,7 +264,7 @@ public class ExploreFragment extends Fragment {
                                             .listener(new RequestListener<Bitmap>() {
                                                           @Override
                                                           public boolean onLoadFailed(@Nullable GlideException e, Object o, Target<Bitmap> target, boolean b) {
-                                                              Toast.makeText(getContext(),getResources().getString(R.string.unexpected_error_occurred_try_again),Toast.LENGTH_SHORT).show();
+                                                              //Toast.makeText(getContext(),getResources().getString(R.string.unexpected_error_occurred_try_again),Toast.LENGTH_SHORT).show();
                                                               return false;
                                                           }
 
@@ -270,7 +313,7 @@ public class ExploreFragment extends Fragment {
                                     .listener(new RequestListener<Bitmap>() {
                                                   @Override
                                                   public boolean onLoadFailed(@Nullable GlideException e, Object o, Target<Bitmap> target, boolean b) {
-                                                      Toast.makeText(getContext(),getResources().getString(R.string.unexpected_error_occurred_try_again),Toast.LENGTH_SHORT).show();
+                                                      //Toast.makeText(getContext(),getResources().getString(R.string.unexpected_error_occurred_try_again),Toast.LENGTH_SHORT).show();
                                                       return false;
                                                   }
 
@@ -287,7 +330,8 @@ public class ExploreFragment extends Fragment {
                                                           @Override
                                                           public boolean onMarkerClick(Marker marker) {
 
-
+                                                              //Intent intent = new Intent(getContext(), DateLocActivity.class);
+                                                              //startActivity(intent);
 
                                                               return false;
                                                           }
@@ -345,15 +389,13 @@ public class ExploreFragment extends Fragment {
         c.drawBitmap(bitmap, 4, 4, p);
         p.setXfermode(null);
         p.setStyle(Paint.Style.STROKE);
-        p.setColor(Color.parseColor("#9EFF4664"));
+        p.setColor(Color.parseColor("#FF4664"));
         p.setStrokeWidth(10);
         //p.setShadowLayer(12, 0, 0, Color.parseColor("#CE504F4F"));
         c.drawCircle((w / 2) + 4, (h / 2) + 4, radius, p);
 
         return output;
     }
-
-
 
 
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
@@ -374,8 +416,12 @@ public class ExploreFragment extends Fragment {
     }
 
 
-
-
-
-
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(v.getContext(), DateLocActivity.class);
+        //Bundle b = new Bundle();
+        //b.putString("locationId", mLayout.getTag().toString());
+        //intent.putExtras(b);
+        v.getContext().startActivity(intent);
+    }
 }

@@ -12,9 +12,12 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -51,11 +54,7 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     private EditText  mName;
     private Button mRegistration;
-    private String currentUId, userId,
-            name,
-            profileImageUrl,
-            userSex,
-            age;
+    private String currentUId, userId;
     private DatabaseReference usersDb;
     private RadioRealButtonGroup mRadioGroup;
 
@@ -66,6 +65,18 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reg_details);
+        Window window = getWindow();
+
+// clear FLAG_TRANSLUCENT_STATUS flag:
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+// finally change the color
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
         mProfileImage = findViewById(R.id.profile_image);
         client = LocationServices.getFusedLocationProviderClient(this);
 
@@ -86,24 +97,11 @@ public class RegisterActivity extends AppCompatActivity {
 
         mRegistration = findViewById(R.id.register);
 
-        mRadioGroup = findViewById(R.id.radioRealButtonGroup);
-        mRadioGroup.setPosition(0);
-
         mRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String name = mName.getText().toString();
-                final String accountType;
-                int selectId = mRadioGroup.getPosition();
 
-
-                switch (selectId) {
-                    case 1:
-                        accountType = "Female";
-                        break;
-                    default:
-                        accountType = "Male";
-                }
 
                 if(resultUri != null) {
                     final DatabaseReference currentUserDb = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
@@ -156,23 +154,9 @@ public class RegisterActivity extends AppCompatActivity {
                 DatabaseReference currentUserDb = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
                 Map userInfo = new HashMap<>();
                 userInfo.put("name", name);
-                userInfo.put("sex", accountType);
-                userInfo.put("profileImageUrl", "default");
-                switch (accountType) {
-                    case "Male":
-                        userInfo.put("interest", "Female");
-                        break;
-                    case "Female":
-                        userInfo.put("interest", "Male");
-                        break;
-                }
-                Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                Intent i = new Intent(getApplicationContext(), ChooseGenderActivity.class);
                 startActivity(i);
-                finish();
-
                 currentUserDb.updateChildren(userInfo);
-                locationUpdate();
                 requestPermissions();
             }
         });
@@ -198,43 +182,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
-    public void locationUpdate() {
-        if (ActivityCompat.checkSelfPermission(RegisterActivity.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        client.getLastLocation().addOnSuccessListener(RegisterActivity.this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
 
-                if (location != null) {
-                    final double longitude = location.getLongitude();
-                    final double latitude = location.getLatitude();
-
-                    String latitudeString = String.valueOf(latitude);
-                    String longitudeString = String.valueOf(longitude);
-
-                    //usersDb.child("latitude").child(latitudeString).setValue(true);
-                    //usersDb.child("longitude").child(longitudeString).setValue(true);
-
-                    Map userLatLng = new HashMap();
-                    userLatLng.put("latitude", latitudeString);
-                    userLatLng.put("longitude", longitudeString);
-
-                    currentUId = mAuth.getCurrentUser().getUid();
-
-                    usersDb.child(currentUId).child("LatLng").updateChildren(userLatLng);
-                }
-
-            }
-        });
-    }
 
     private void requestPermissions() {
         ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION}, 1);
