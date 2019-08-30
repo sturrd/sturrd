@@ -77,12 +77,12 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 public class ExploreFragment extends Fragment implements View.OnClickListener {
 
     private RecyclerView recyclerView;
-    private ImageView mDateLoc;
+    private ImageView mDateLoc, mCloseInfo;
     private TextView mLocationText;
     private RecyclerView.Adapter adapter;
     private DatabaseReference mPlaces, placesDb, usersDb;
     private ProgressDialog progressDialog;
-    private Button mRequestDate, mCloseInfo;
+    private Button mRequestDate;
     private List<DateLocObject> dateLocObjects;
     private String locationId, name, thumbnailUrl;
     private String currentUserID, currentUId;
@@ -126,7 +126,7 @@ public class ExploreFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        mLayout = view.findViewById(R.id.card_layout_location_cards);
+        mLayout = view.findViewById(R.id.info_layout);
 
         mLayout.setVisibility(View.INVISIBLE);
 
