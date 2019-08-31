@@ -2,11 +2,13 @@ package com.sturrd.sturrd;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -22,6 +24,7 @@ import com.sturrd.sturrd.Fragments.DatesFragment;
 import com.sturrd.sturrd.Fragments.ExploreFragment;
 import com.sturrd.sturrd.Fragments.MessagesFragment;
 
+import com.sturrd.sturrd.Fragments.RequestDates;
 import com.sturrd.sturrd.Fragments.RequestsFragment;
 import com.sturrd.sturrd.Fragments.UserFragment;
 
@@ -52,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     RequestsFragment requestsFragment;
     ExploreFragment exploreFragment;
     UserFragment userFragment;
+    RequestDates requestDates;
 
     MenuItem prevMenuItem;
 
@@ -60,19 +64,17 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Window window = getWindow();
 
-// clear FLAG_TRANSLUCENT_STATUS flag:
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-// finally change the color
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            View decor = getWindow().getDecorView();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            }
+            window.setStatusBarColor(Color.TRANSPARENT);
         }
-        //save the notificationID to the database
 
         viewPager = findViewById(R.id.viewpager);
 
@@ -169,14 +171,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private void setupViewPager(ViewPager viewPager)
     {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        datesFragment = new DatesFragment();
-        requestsFragment = new RequestsFragment();
+        requestDates = new RequestDates();
         exploreFragment = new ExploreFragment();
         userFragment = new UserFragment();
         messagesFragment = new MessagesFragment();
         adapter.addFragment(exploreFragment, "Explore");
-        adapter.addFragment(requestsFragment, "Requests");
-        adapter.addFragment(datesFragment, "Dates");
+        adapter.addFragment(requestDates, "Dates");
         adapter.addFragment(messagesFragment,"Messages");
         adapter.addFragment(userFragment, "Profile");
         viewPager.setAdapter(adapter);
@@ -221,18 +221,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 break;
 
             case R.id.sturrd_dates:
-                viewPager.setCurrentItem(2);
+                viewPager.setCurrentItem(1);
                 break;
 
             case R.id.sturrd_profile:
-                viewPager.setCurrentItem(4);
+                viewPager.setCurrentItem(3);
                 break;
 
             case R.id.sturrd_messages:
-                viewPager.setCurrentItem(3);
-                break;
-            case R.id.sturrd_requests:
-                viewPager.setCurrentItem(1);
+                viewPager.setCurrentItem(2);
                 break;
 
         }

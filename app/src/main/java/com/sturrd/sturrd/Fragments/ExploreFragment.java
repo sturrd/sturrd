@@ -145,20 +145,19 @@ public class ExploreFragment extends Fragment implements View.OnClickListener {
         recyclerView.setOnClickListener(this);
 
 
-
-        progressDialog = new ProgressDialog(getContext());
+        //progressDialog = new ProgressDialog(getContext());
 
         dateLocObjects = new ArrayList<>();
 
         //displaying progress dialog while fetching images
-        progressDialog.setMessage("Please wait...");
-        progressDialog.show();
+        //progressDialog.setMessage("Please wait...");
+        //progressDialog.show();
 
         placesDb.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 //dismissing the progress dialog
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
 
                 //iterating through all the values in database
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {

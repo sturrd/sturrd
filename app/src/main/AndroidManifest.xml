@@ -13,7 +13,9 @@
         android:roundIcon="@drawable/ic_launchit"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:windowSoftInputMode="adjustResize"
         tools:ignore="GoogleAppIndexingWarning">
+
         <activity android:name=".ChooseGenderActivity" />
 
         <meta-data
