@@ -56,6 +56,7 @@ import com.sturrd.sturrd.DateLocActivity;
 import com.sturrd.sturrd.DateLocation.DateLocAdapter;
 import com.sturrd.sturrd.DateLocation.DateLocObject;
 import com.sturrd.sturrd.LatLngObject;
+import com.sturrd.sturrd.ProfilesRequest;
 import com.sturrd.sturrd.R;
 import com.sturrd.sturrd.RecyclerTouchListener;
 
@@ -84,7 +85,6 @@ public class ExploreFragment extends Fragment implements View.OnClickListener {
     private ProgressDialog progressDialog;
     private Button mRequestDate;
     private List<DateLocObject> dateLocObjects;
-    private String locationId, name, thumbnailUrl;
     private String currentUserID, currentUId;
     private FirebaseAuth mAuth;
     private View view;
@@ -149,6 +149,7 @@ public class ExploreFragment extends Fragment implements View.OnClickListener {
 
         dateLocObjects = new ArrayList<>();
 
+
         //displaying progress dialog while fetching images
         //progressDialog.setMessage("Please wait...");
         //progressDialog.show();
@@ -170,10 +171,21 @@ public class ExploreFragment extends Fragment implements View.OnClickListener {
                 recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
                     @Override
                     public void onClick(View view, int position) {
-                        DateLocObject infoDetails = dateLocObjects.get(position);
+                        final DateLocObject infoDetails = dateLocObjects.get(position);
                         mLocationText.setText(infoDetails.getName());
                         Glide.with(getContext()).load(infoDetails.getImage()).apply(RequestOptions.centerCropTransform()).into(mDateLoc);
                         mLayout.setVisibility(View.VISIBLE);
+
+                        mRequestDate.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(v.getContext(), ProfilesRequest.class);
+                                Bundle b = new Bundle();
+                                b.putString("locationId", infoDetails.getName());
+                                intent.putExtras(b);
+                                v.getContext().startActivity(intent);
+                            }
+                        });
 
                     }
 

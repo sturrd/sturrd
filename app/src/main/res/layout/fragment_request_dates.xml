@@ -15,7 +15,7 @@
             android:id="@+id/tab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="35dp"
             app:tabBackground="@android:color/white"
             app:tabIndicatorColor="@color/colorPrimary"
             app:tabMode="fixed"

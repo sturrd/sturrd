@@ -15,7 +15,7 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:windowSoftInputMode="adjustResize"
         tools:ignore="GoogleAppIndexingWarning">
-
+        <activity android:name=".ProfilesRequest"></activity>
         <activity android:name=".ChooseGenderActivity" />
 
         <meta-data
