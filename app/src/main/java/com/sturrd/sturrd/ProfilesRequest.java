@@ -139,6 +139,7 @@ public class ProfilesRequest extends AppCompatActivity {
                     String profileImageUrl = "",
                             name = "",
                             job = "",
+                            age = "",
                             userId = dataSnapshot.getKey();
 
                     if (dataSnapshot.child("name").getValue() != null)
@@ -147,6 +148,8 @@ public class ProfilesRequest extends AppCompatActivity {
                         profileImageUrl = dataSnapshot.child("profileImageUrl").getValue().toString();
                     if (dataSnapshot.child("job").getValue() != null)
                         job = dataSnapshot.child("job").getValue().toString();
+                    if (dataSnapshot.child("age").getValue() != null)
+                        age = dataSnapshot.child("age").getValue().toString();
 
 
                     for (int i = 0; i < resultsProfile.size(); i++) {
@@ -154,7 +157,7 @@ public class ProfilesRequest extends AppCompatActivity {
                             return;
                     }
 
-                    LocRequestObject obj = new LocRequestObject(profileImageUrl, name, job, userId);
+                    LocRequestObject obj = new LocRequestObject(profileImageUrl, name, job, age, userId);
                     resultsProfile.add(obj);
                     adapter.notifyDataSetChanged();
                 }

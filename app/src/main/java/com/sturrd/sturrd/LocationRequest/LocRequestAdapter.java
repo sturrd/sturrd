@@ -37,7 +37,7 @@ public class LocRequestAdapter extends RecyclerView.Adapter<LocRequestViewHolder
     @Override
     public void onBindViewHolder(LocRequestViewHolder holder, int position) {
         LocRequestObject profile = profiles.get(position);
-        holder.txtName.setText(profile.getName());
+        holder.txtName.setText(profile.getName() + ", " + profile.getAge());
         holder.txtJob.setText(profile.getJob());
         Glide.with(context).load(profile.getImage()).apply(RequestOptions.centerCropTransform()).into(holder.imageView);
     }
