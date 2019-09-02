@@ -132,7 +132,7 @@
                         android:drawablePadding="10dp"
                         android:drawableTint="@color/colorPrimary"
                         android:fontFamily="@font/helevtica"
-                        android:text="10 reviews"
+                        android:text="0 reviews"
                         android:textSize="16sp" />
 
                     <LinearLayout
@@ -159,7 +159,7 @@
                             android:layout_marginTop="2dp"
                             android:isIndicator="true"
                             android:numStars="5"
-                            android:rating="4.5"
+                            android:rating="0"
                             android:stepSize="0.1" />
 
 
