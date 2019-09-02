@@ -81,6 +81,7 @@
                         android:id="@+id/img_location_card"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@android:color/darker_gray"
                         android:src="@drawable/img_default" />
 
                     <LinearLayout
@@ -105,8 +106,8 @@
 
                     <ImageView
                         android:id="@+id/btn_cancel"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_gravity="top|right"
                         android:layout_margin="10dp"
                         android:src="@drawable/ic_close"
