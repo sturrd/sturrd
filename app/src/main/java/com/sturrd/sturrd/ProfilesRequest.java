@@ -91,7 +91,8 @@ public class ProfilesRequest extends AppCompatActivity {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                LocRequestObject profile = profiles.get(position);
+
+                //LocRequestObject profile = profiles.get(position);
                 Toast.makeText(getApplicationContext(), "Clicked", Toast.LENGTH_LONG).show();
             }
 
