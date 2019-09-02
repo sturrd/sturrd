@@ -110,7 +110,9 @@ public class ProfilesRequest extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot profile : dataSnapshot.getChildren()) {
-                        FetchProfileInformation(profile.getKey());
+                        if (!profile.getKey().equals(currentUserID)) {
+                            FetchProfileInformation(profile.getKey());
+                        }
                     }
                 }
             }
