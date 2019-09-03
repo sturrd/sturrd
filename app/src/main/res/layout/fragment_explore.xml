@@ -80,7 +80,7 @@
                     <ImageView
                         android:id="@+id/img_location_card"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:background="@android:color/darker_gray"
                         android:src="@drawable/img_default" />
 
@@ -119,6 +119,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:layout_margin="10dp"
                     android:weightSum="2">
 
                     <TextView
@@ -126,7 +127,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left|center"
-                        android:layout_marginLeft="10dp"
                         android:layout_weight="1"
                         android:drawableLeft="@drawable/ic_dates"
                         android:drawablePadding="10dp"
@@ -183,6 +183,10 @@
                     android:fontFamily="@font/helevtica"
                     android:text="@string/request_for_a_date"
                     android:textAllCaps="false"
+                    android:shadowColor="@android:color/black"
+                    android:shadowDx="0"
+                    android:shadowDy="5"
+                    android:shadowRadius="10"
                     android:textColor="@android:color/white"
                     app:elevation="5dp" />
 

@@ -15,7 +15,8 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:windowSoftInputMode="adjustResize"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ProfilesRequest"></activity>
+        <activity android:name=".AuthActivity" />
+        <activity android:name=".ProfilesRequest" />
         <activity android:name=".ChooseGenderActivity" />
 
         <meta-data
@@ -30,7 +31,7 @@
         <activity android:name=".DateLocActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".VerifyActivity" />
-        <activity android:name=".AuthActivity">
+        <activity android:name=".ProfileActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
