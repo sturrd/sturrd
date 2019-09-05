@@ -56,6 +56,8 @@ import com.sturrd.sturrd.DateLocActivity;
 import com.sturrd.sturrd.DateLocation.DateLocAdapter;
 import com.sturrd.sturrd.DateLocation.DateLocObject;
 import com.sturrd.sturrd.LatLngObject;
+import com.sturrd.sturrd.LocationRequest.LocRequestObject;
+import com.sturrd.sturrd.ProfileActivity;
 import com.sturrd.sturrd.ProfilesRequest;
 import com.sturrd.sturrd.R;
 import com.sturrd.sturrd.RecyclerTouchListener;
@@ -75,7 +77,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 
-public class ExploreFragment extends Fragment implements View.OnClickListener {
+public class ExploreFragment extends Fragment implements View.OnClickListener,
+        OnMapReadyCallback {
 
     private RecyclerView recyclerView;
     private ImageView mDateLoc, mCloseInfo;
@@ -88,14 +91,16 @@ public class ExploreFragment extends Fragment implements View.OnClickListener {
     private String currentUserID, currentUId;
     private FirebaseAuth mAuth;
     private View view;
-    private GoogleMap mMap;
+    ArrayList<LatLngObject> resultsProfile = new ArrayList<>();
     private LinearLayout mLayout;
     private RecyclerView mLocationCards;
     private RecyclerView.Adapter mLocationCardsAdapter;
     private FusedLocationProviderClient client;
     private LinearLayoutManager mLocationCardsLayoutManager;
     private ChildEventListener mChildEventListener;
-    private List<DateLocObject> dateLocObject;
+    ArrayList<String> index = new ArrayList<>();
+    private GoogleMap googleMap;
+
     Marker marker;
 
     public ExploreFragment() {
@@ -107,6 +112,7 @@ public class ExploreFragment extends Fragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
     }
 
+    private ArrayList<LatLngObject> resultsPlaceImages = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -165,6 +171,9 @@ public class ExploreFragment extends Fragment implements View.OnClickListener {
                     DateLocObject image = postSnapshot.getValue(DateLocObject.class);
                     dateLocObjects.add(image);
 
+                    // DateLocObject image = postSnapshot.getValue(DateLocObject.class);
+                    //dateLocObjects.add(image);
+
 
                 }
                 adapter = new DateLocAdapter(getContext(), dateLocObjects);
@@ -180,9 +189,9 @@ public class ExploreFragment extends Fragment implements View.OnClickListener {
                             @Override
                             public void onClick(View v) {
                                 Intent intent = new Intent(v.getContext(), ProfilesRequest.class);
-                                Bundle b = new Bundle();
-                                b.putString("locationId", infoDetails.getName());
-                                intent.putExtras(b);
+                                Bundle c = new Bundle();
+                                c.putString("locationId", infoDetails.getName());
+                                intent.putExtras(c);
                                 v.getContext().startActivity(intent);
                             }
                         });
@@ -206,180 +215,18 @@ public class ExploreFragment extends Fragment implements View.OnClickListener {
         });
 
 
+        mAuth = FirebaseAuth.getInstance();
 
 
-    mAuth = FirebaseAuth.getInstance();
-
-        client = LocationServices.getFusedLocationProviderClient(getContext());
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frg);  //use SuppoprtMapFragment for using in fragment instead of activity  MapFragment = activity   SupportMapFragment = fragment
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @SuppressLint("MissingPermission")
-            @Override
-            public void onMapReady(final GoogleMap mMap) {
-
-                try {
-                    // Customise the styling of the base map using a JSON object defined
-                    // in a raw resource file.
-                    boolean success = mMap.setMapStyle(
-                            MapStyleOptions.loadRawResourceStyle(
-                                    getContext(), R.raw.style_json));
-
-                    if (!success) {
-                        Log.e(TAG, "Style parsing failed.");
-                    }
-                } catch (Resources.NotFoundException e) {
-                    Log.e(TAG, "Can't find style. Error: ", e);
-                }
-
-                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
-                mMap.clear(); //clear old markers
-
-
-                client.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(final Location location) {
-                        if (location != null) {
-                            final double longitude = location.getLongitude();
-                            final double latitude = location.getLatitude();
-
-                            String latitudeString = String.valueOf(latitude);
-                            String longitudeString = String.valueOf(longitude);
-
-                            //usersDb.child("latitude").child(latitudeString).setValue(true);
-                            //usersDb.child("longitude").child(longitudeString).setValue(true);
-
-                            Map userLatLng = new HashMap();
-                            userLatLng.put("latitude", latitudeString);
-                            userLatLng.put("longitude", longitudeString);
-
-                            DatabaseReference mLatLng = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserID);
-                            mLatLng.updateChildren(userLatLng);
-
-                            mLatLng.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    String profileImageUrl = dataSnapshot.child("profileImageUrl").getValue().toString();
-
-
-                                    final CameraPosition googlePlex = CameraPosition.builder()
-                                            .target(new LatLng(latitude, longitude))
-                                            .zoom(16)
-                                            .bearing(location.getBearing())
-                                            .bearing(90)
-                                            .build();
-
-                                    Glide.with(getContext())
-                                            .asBitmap().load(profileImageUrl).apply(RequestOptions.circleCropTransform().override(150, 150))
-                                            .listener(new RequestListener<Bitmap>() {
-                                                          @Override
-                                                          public boolean onLoadFailed(@Nullable GlideException e, Object o, Target<Bitmap> target, boolean b) {
-                                                              //Toast.makeText(getContext(),getResources().getString(R.string.unexpected_error_occurred_try_again),Toast.LENGTH_SHORT).show();
-                                                              return false;
-                                                          }
-
-                                                          @Override
-                                                          public boolean onResourceReady(Bitmap bitmap, Object o, Target<Bitmap> target, DataSource dataSource, boolean b) {
-                                                              mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 10000, null);
-
-                                                              mMap.addMarker(new MarkerOptions()
-                                                                      .position(new LatLng(latitude, longitude))
-                                                                      .title("Me")
-                                                                      .icon(BitmapDescriptorFactory.fromBitmap(BitmapMarker(bitmap))));
-                                                              return false;
-                                                          }
-                                                      }
-                                            ).submit();
-
-
-
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-
-
-
-
-
-
-
-                        }
-                    }
-                });
-                usersDb.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot s : dataSnapshot.getChildren()){
-                            final LatLngObject user = s.getValue(LatLngObject.class);
-                            final LatLng location=new LatLng(user.Latitude, user.Longitude);
-                            String profileImageUrl = user.profileImageUrl;
-
-                            Glide.with(getContext())
-                                    .asBitmap().load(profileImageUrl).apply(RequestOptions.circleCropTransform().override(150, 150))
-                                    .listener(new RequestListener<Bitmap>() {
-                                                  @Override
-                                                  public boolean onLoadFailed(@Nullable GlideException e, Object o, Target<Bitmap> target, boolean b) {
-                                                      //Toast.makeText(getContext(),getResources().getString(R.string.unexpected_error_occurred_try_again),Toast.LENGTH_SHORT).show();
-                                                      return false;
-                                                  }
-
-                                                  @Override
-                                                  public boolean onResourceReady(Bitmap bitmap, Object o, Target<Bitmap> target, DataSource dataSource, boolean b) {
-
-
-                                                      mMap.addMarker(new MarkerOptions()
-                                                              .position(location)
-                                                              .title(user.name)
-                                                              .icon(BitmapDescriptorFactory.fromBitmap(BitmapMarker(bitmap))));
-
-                                                      mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                                                          @Override
-                                                          public boolean onMarkerClick(Marker marker) {
-
-                                                              //Intent intent = new Intent(getContext(), DateLocActivity.class);
-                                                              //startActivity(intent);
-
-                                                              return false;
-                                                          }
-                                                      });
-                                                      return false;
-
-
-                                                  }
-
-
-
-                                              }
-                                    ).submit();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-            }
-
-
-
-
-
-        });
-
-
+        mapFragment.getMapAsync(this);
 
 
         return view;
     }
 
-    public Bitmap BitmapMarker(Bitmap bitmap){
+    public Bitmap BitmapMarker(Bitmap bitmap) {
         int w = bitmap.getWidth();
         int h = bitmap.getHeight();
 
@@ -401,13 +248,12 @@ public class ExploreFragment extends Fragment implements View.OnClickListener {
         p.setXfermode(null);
         p.setStyle(Paint.Style.STROKE);
         p.setColor(Color.parseColor("#FF4664"));
-        p.setStrokeWidth(10);
+        p.setStrokeWidth(5);
         //p.setShadowLayer(12, 0, 0, Color.parseColor("#CE504F4F"));
         c.drawCircle((w / 2) + 4, (h / 2) + 4, radius, p);
 
         return output;
     }
-
 
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
@@ -418,10 +264,7 @@ public class ExploreFragment extends Fragment implements View.OnClickListener {
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-
-
-    private ArrayList<LatLngObject> resultsPlaceImages = new ArrayList<>();
-    private List<LatLngObject> getDataSetLocations(){
+    private List<LatLngObject> getDataSetLocations() {
 
         return resultsPlaceImages;
     }
@@ -435,4 +278,174 @@ public class ExploreFragment extends Fragment implements View.OnClickListener {
         //intent.putExtras(b);
         v.getContext().startActivity(intent);
     }
+
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onMapReady(final GoogleMap googleMap) {
+
+        googleMap.setMyLocationEnabled(true);
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            boolean success = googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            getContext(), R.raw.style_json));
+
+            if (!success) {
+                Log.e(TAG, "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e(TAG, "Can't find style. Error: ", e);
+        }
+
+        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+        googleMap.clear(); //clear old markers
+
+        client = LocationServices.getFusedLocationProviderClient(getContext());
+
+
+        client.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(final Location location) {
+                if (location != null) {
+                    final double longitude = location.getLongitude();
+                    final double latitude = location.getLatitude();
+
+                    String latitudeString = String.valueOf(latitude);
+                    String longitudeString = String.valueOf(longitude);
+
+                    //usersDb.child("latitude").child(latitudeString).setValue(true);
+                    //usersDb.child("longitude").child(longitudeString).setValue(true);
+
+                    Map userLatLng = new HashMap();
+                    userLatLng.put("latitude", latitudeString);
+                    userLatLng.put("longitude", longitudeString);
+
+                    DatabaseReference mLatLng = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserID);
+                    mLatLng.updateChildren(userLatLng);
+
+                    mLatLng.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            String profileImageUrl = dataSnapshot.child("profileImageUrl").getValue().toString();
+
+
+                            final CameraPosition googlePlex = CameraPosition.builder()
+                                    .target(new LatLng(latitude, longitude))
+                                    .zoom(16)
+                                    .bearing(location.getBearing())
+                                    .build();
+
+                            Glide.with(getContext())
+                                    .asBitmap().load(profileImageUrl).apply(RequestOptions.circleCropTransform().override(120, 120))
+                                    .listener(new RequestListener<Bitmap>() {
+                                                  @Override
+                                                  public boolean onLoadFailed(@Nullable GlideException e, Object o, Target<Bitmap> target, boolean b) {
+                                                      //Toast.makeText(getContext(),getResources().getString(R.string.unexpected_error_occurred_try_again),Toast.LENGTH_SHORT).show();
+                                                      return false;
+                                                  }
+
+                                                  @Override
+                                                  public boolean onResourceReady(Bitmap bitmap, Object o, Target<Bitmap> target, DataSource dataSource, boolean b) {
+
+                                                      googleMap.clear();
+                                                      googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 10000, null);
+
+                                                      return false;
+                                                  }
+                                              }
+                                    ).submit();
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+
+                }
+            }
+        });
+        usersDb.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (final DataSnapshot s : dataSnapshot.getChildren()) {
+                    if (!s.getKey().equals(currentUserID)) {
+
+
+                        final LatLngObject user = s.getValue(LatLngObject.class);
+                        final LatLng location = new LatLng(user.Latitude, user.Longitude);
+                        resultsProfile.add(user);
+                        index.add(user.name);
+
+
+                        String profileImageUrl = user.profileImageUrl;
+                        Glide.with(getContext())
+                                .asBitmap().load(profileImageUrl).apply(RequestOptions.circleCropTransform().override(120, 120))
+                                .listener(new RequestListener<Bitmap>() {
+                                              @Override
+                                              public boolean onLoadFailed(@Nullable GlideException e, Object o, Target<Bitmap> target, boolean b) {
+                                                  //Toast.makeText(getContext(),getResources().getString(R.string.unexpected_error_occurred_try_again),Toast.LENGTH_SHORT).show();
+                                                  return false;
+                                              }
+
+                                              @Override
+                                              public boolean onResourceReady(Bitmap bitmap, Object o, Target<Bitmap> target, DataSource dataSource, boolean b) {
+
+                                                  marker = googleMap.addMarker(new MarkerOptions()
+                                                          .position(location)
+                                                          .title(user.name)
+                                                          .icon(BitmapDescriptorFactory.fromBitmap(BitmapMarker(bitmap))));
+                                                  marker.setTag(s.getKey());
+
+                                                  googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                                                      @Override
+                                                      public boolean onMarkerClick(Marker marker) {
+                                                          Intent i = new Intent(getContext(), ProfileActivity.class);
+                                                          Bundle b = new Bundle();
+                                                          b.putString("userId", marker.getTag().toString());
+                                                          i.putExtras(b);
+                                                          startActivity(i);
+
+                                                          return false;
+                                                      }
+                                                  });
+
+
+                                                  return false;
+
+
+                                              }
+
+
+                                          }
+
+                                ).submit();
+
+
+                    }
+
+                }
+
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+
+
+        });
+
+    }
+
+
 }

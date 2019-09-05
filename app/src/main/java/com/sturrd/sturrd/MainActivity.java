@@ -152,8 +152,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     //usersDb.child("longitude").child(longitudeString).setValue(true);
 
                     Map userLatLng = new HashMap();
-                    userLatLng.put("latitude", latitudeString);
-                    userLatLng.put("longitude", longitudeString);
+                    userLatLng.put("Latitude", latitudeString);
+                    userLatLng.put("Longitude", longitudeString);
 
 
                     usersDb.child(currentUId).updateChildren(userLatLng);

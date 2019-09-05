@@ -39,4 +39,7 @@
     <string name="there_are_no_dates">There are no dates!</string>
     <string name="unexpected_error_occurred_try_again">Unexpected error occurred try again</string>
     <string name="request_for_a_date">Request for a date</string>
+    <string name="demo_about">I really love hanging out a lot, just looking to have fun and escape the mess of just chatting all the time</string>
+    <string name="request">Request</string>
+    <string name="about">About</string>
 </resources>

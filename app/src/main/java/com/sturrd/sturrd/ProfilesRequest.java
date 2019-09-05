@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -64,7 +65,6 @@ public class ProfilesRequest extends AppCompatActivity {
         currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         txtLocation = findViewById(R.id.txt_location_title);
-
         txtLocation.setText(locationId);
 
         mBack.setOnClickListener(new View.OnClickListener() {
@@ -92,8 +92,12 @@ public class ProfilesRequest extends AppCompatActivity {
             @Override
             public void onClick(View view, int position) {
 
-                //LocRequestObject profile = profiles.get(position);
-                Toast.makeText(getApplicationContext(), "Clicked", Toast.LENGTH_LONG).show();
+                LocRequestObject profile = resultsProfile.get(position);
+                Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
+                Bundle b = new Bundle();
+                b.putString("userId", profile.userId);
+                i.putExtras(b);
+                startActivity(i);
             }
 
             @Override
