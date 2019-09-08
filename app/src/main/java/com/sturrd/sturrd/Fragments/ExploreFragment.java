@@ -137,10 +137,8 @@ public class ExploreFragment extends Fragment implements View.OnClickListener,
         mLayout.setVisibility(View.INVISIBLE);
 
         mLocationText = view.findViewById(R.id.txt_location_name);
-        mPlaces = FirebaseDatabase.getInstance().getReference("Places");
         usersDb = FirebaseDatabase.getInstance().getReference("Users");
         placesDb = FirebaseDatabase.getInstance().getReference("Places");
-        mPlaces.push().setValue(marker);
         currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
@@ -316,15 +314,12 @@ public class ExploreFragment extends Fragment implements View.OnClickListener,
                     String latitudeString = String.valueOf(latitude);
                     String longitudeString = String.valueOf(longitude);
 
-                    //usersDb.child("latitude").child(latitudeString).setValue(true);
-                    //usersDb.child("longitude").child(longitudeString).setValue(true);
-
-                    Map userLatLng = new HashMap();
-                    userLatLng.put("latitude", latitudeString);
-                    userLatLng.put("longitude", longitudeString);
+                    // Map userLatLng = new HashMap();
+                    //userLatLng.put("Latitude", latitudeString);
+                    //userLatLng.put("Longitude", longitudeString);
 
                     DatabaseReference mLatLng = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserID);
-                    mLatLng.updateChildren(userLatLng);
+                    //mLatLng.updateChildren(userLatLng);
 
                     mLatLng.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -382,7 +377,6 @@ public class ExploreFragment extends Fragment implements View.OnClickListener,
                         final LatLngObject user = s.getValue(LatLngObject.class);
                         final LatLng location = new LatLng(user.Latitude, user.Longitude);
                         resultsProfile.add(user);
-                        index.add(user.name);
 
 
                         String profileImageUrl = user.profileImageUrl;
