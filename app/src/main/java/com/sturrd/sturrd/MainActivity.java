@@ -145,15 +145,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                     final double longitude = location.getLongitude();
                     final double latitude = location.getLatitude();
 
-                    String latitudeString = String.valueOf(latitude);
-                    String longitudeString = String.valueOf(longitude);
+
 
                     //usersDb.child("latitude").child(latitudeString).setValue(true);
                     //usersDb.child("longitude").child(longitudeString).setValue(true);
 
                     Map userLatLng = new HashMap();
-                    userLatLng.put("Latitude", latitudeString);
-                    userLatLng.put("Longitude", longitudeString);
+                    userLatLng.put("Latitude", latitude);
+                    userLatLng.put("Longitude", longitude);
 
 
                     usersDb.child(currentUId).updateChildren(userLatLng);
